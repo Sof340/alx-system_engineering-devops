@@ -10,7 +10,7 @@ USER_TO_RUN_AS=$1
 
 # Check if the user exists
 if id "$USER_TO_RUN_AS" &>/dev/null; then
-    su -c "whoami" "$USER_TO_RUN_AS"
+    su -l "whoami" "$USER_TO_RUN_AS"
 else
     echo "User '$USER_TO_RUN_AS' does not exist."
     exit 1
