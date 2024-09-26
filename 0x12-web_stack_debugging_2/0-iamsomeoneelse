@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# This script runs the 'whoami' command as the specified user.
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <username>"
+    exit 1
+fi
+
+USER_TO_RUN_AS=$1
+
+# Check if the user exists
+if id "$USER_TO_RUN_AS" &>/dev/null; then
+    su -c "whoami" "$USER_TO_RUN_AS"
+else
+    echo "User '$USER_TO_RUN_AS' does not exist."
+    exit 1
+fi
