@@ -2,18 +2,29 @@
 # This script configures Nginx to run as the nginx user and listen on port 8080.
 
 
-# Modify Nginx configuration
-NGINX_CONF="/etc/nginx/nginx.conf"
-
 # Backup the original configuration file
+NGINX_CONF="/etc/nginx/nginx.conf"
 cp "$NGINX_CONF" "$NGINX_CONF.bak"
 
-# Update the user and listen port in the Nginx configuration
-sed -i 's/^user .*;/user nginx;/' "$NGINX_CONF"
-sed -i 's/listen .*;/listen 8080;/' "$NGINX_CONF"
+# Modify Nginx configuration
+{
+    sed -i 's/^user .*;/user nginx;/' "$NGINX_CONF" &&
+    sed -i 's/listen .*;/listen 8080;/' "$NGINX_CONF"
+} || {
+    echo "Failed to modify Nginx configuration."
+    exit 1
+}
 
-# Start Nginx
-systemctl restart nginx
+# Restart Nginx
+if ! systemctl restart nginx; then
+    echo "Failed to restart Nginx."
+    exit 1
+fi
 
-# Step 4: Verify that Nginx is running as the nginx user
-ps auxff | grep ngin[x]
+# Verify that Nginx is running as the nginx user
+if ! ps auxff | grep -q '[n]ginx'; then
+    echo "Nginx is not running as the nginx user."
+    exit 1
+fi
+
+echo "Nginx configured successfully."
