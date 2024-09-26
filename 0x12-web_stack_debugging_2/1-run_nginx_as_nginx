@@ -22,7 +22,7 @@ if ! systemctl restart nginx; then
 fi
 
 # Verify that Nginx is running as the nginx user
-if ! ps auxff | grep -q '[n]ginx'; then
+if ! pgrep -u nginx nginx > /dev/null; then
     echo "Nginx is not running as the nginx user."
     exit 1
 fi
